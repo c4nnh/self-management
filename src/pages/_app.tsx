@@ -1,6 +1,7 @@
 import { AppLayout } from '@/components/layouts/App'
 import '@/styles/globals.css'
 import { Role } from '@/types'
+import { api } from '@/utils/api'
 import { NextPage } from 'next'
 import { SessionProvider, useSession } from 'next-auth/react'
 import type { AppProps as NAppProps } from 'next/app'
@@ -15,10 +16,10 @@ type AppProps = Omit<NAppProps, 'Component'> & {
   Component: NextPageWithAuth
 }
 
-export default function MyApp({
+const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) {
+}: AppProps) => {
   return (
     <SessionProvider session={session}>
       {(Component.roles || []).length ? (
@@ -34,7 +35,9 @@ export default function MyApp({
   )
 }
 
-const Auth: React.FC<
+export default api.withTRPC(MyApp)
+
+export const Auth: React.FC<
   PropsWithChildren & {
     roles?: Role[]
   }
